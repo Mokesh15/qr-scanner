@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Scanner</title>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #reader {
+            width: 90vw;  /* Make the scanner take 90% of the viewport width */
+            max-width: 500px; /* Maximum size for larger screens */
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>QR Code Scanner--summa pannadhu</h1>
+    <div id="reader"></div>
+    <div id="result"></div>
+
+    <script>
+        function getQRBoxSize() {
+            const screenWidth = window.innerWidth;
+            return screenWidth < 500 ? screenWidth * 0.8 : 250;  // Adjust box size based on screen width
+        }
+
+        function startScanner() {
+            const scanner = new Html5QrcodeScanner("reader", {
+                qrbox: getQRBoxSize(),  // Set dynamic size
+                fps: 10
+            });
+
+            // Success callback
+            function success(result) {
+                document.getElementById("result").innerHTML = `
+                    <h2>Scan Successful!</h2>
+                    <p><a href="${result}" target="_blank">${result}</a></p>
+                `;
+                scanner.clear(); // Stop scanning after success
+            }
+
+            // Error callback (optional)
+            function error(err) {
+                console.warn("QR Scan Error: ", err);
+            }
+
+            // Start scanning
+            scanner.render(success, error);
+        }
+
+        // Wait for page to load before starting scanner
+        window.onload = startScanner;
+    </script>
+
+</body>
+</html>
